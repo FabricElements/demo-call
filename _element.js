@@ -12,10 +12,16 @@ class DemoCall extends PolymerElement {
   static get template() {
     return html`
       <style>
-        :host {
-          display: block;
-        }
-      </style>
+  :host {
+    font-family: sans-serif;
+    --icon-toggle-color: lightgrey;
+    --icon-toggle-outline-color: black;
+    --icon-toggle-pressed-color: red;
+  }
+</style>
+      
+      <icon-toggle toggle-icon="menu"></icon-toggle>
+      <icon-toggle toggle-icon="star" pressed></icon-toggle>
       <h2>Hello [[prop1]]!</h2>
     `;
   }
