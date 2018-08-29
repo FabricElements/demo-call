@@ -5,7 +5,6 @@ import '@polymer/iron-icons/notification-icons.js';
 import '@polymer/iron-icons/communication-icons.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 
-
 /**
  * `demo-call`
  * demo-call component
@@ -40,16 +39,24 @@ class DemoCall extends PolymerElement {
         paper-icon-button[active] {
           background-color: var(--paper-green-a700);
         }
+        
+        paper-icon-button[toggleOne] {
+          background-color: var(--paper-red-a700);
+        }
       /*  paper-icon-button[active] {
           background-color: var(--paper-red-a700);
         } */
       </style>
+      <paper-icon-button icon="[[toggleOne]]"
+                          on-tap="toggle"
+                          active$="[[reactive]]">
+      </paper-icon-button>
+      
       <paper-icon-button icon="[[toggleIcon]]"
                           on-tap="toggle"
                           active$="[[active]]">
       </paper-icon-button>
       LLamada entrante
-      
     `;
   }
 
@@ -59,6 +66,12 @@ class DemoCall extends PolymerElement {
    */
   static get properties() {
     return {
+
+      toggleOne: {
+        type: String,
+        value: 'communication:call',
+        // computed: '_computeIcon(reactive)',
+      },
 
       active: {
         type: Boolean,
@@ -73,13 +86,13 @@ class DemoCall extends PolymerElement {
         value: 'communication:call',
         computed: '_computeIcon(active)',
       },
-
     };
   }
 
   /**
    * Constructor
    */
+  // phone-missed
   constructor() {
     super();
     // this.addEventListener('click', this.toggle.bind(this));
@@ -90,14 +103,12 @@ class DemoCall extends PolymerElement {
   }
 
   _activeObserver(active) {
-    // this.toggleIcon = active ? 'notification:phone-in-talk' : 'communication:call';
+    this.toggleIcon = active ? 'notification:phone-in-talk' : 'notification:phone-missed';
   }
 
   _computeIcon(active) {
-    return active ? 'notification:phone-in-talk' : 'communication:call';
+    return active ? 'notification:phone-in-talk' : 'notification:phone-missed';
   }
-
-
 }
 
 window.customElements.define('demo-call', DemoCall);
