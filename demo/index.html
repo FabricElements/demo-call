@@ -22,11 +22,23 @@
   </head>
   <body>
     <div class="vertical-section-container centered">
-      <h3>Basic demo-call demo</h3>
-      <h4>Hola mundo</h4>
       <demo-snippet>
         <template>
-          <demo-call active>Hola mundo 2</demo-call>
+          <demo-call></demo-call>
+        </template>
+      </demo-snippet>
+    </div>
+    <div class="vertical-section-container centered">
+      <demo-snippet>
+        <template>
+          <demo-call status="ringing"></demo-call>
+        </template>
+      </demo-snippet>
+    </div>
+    <div class="vertical-section-container centered">
+      <demo-snippet>
+        <template>
+          <demo-call status="failed"></demo-call>
         </template>
       </demo-snippet>
     </div>

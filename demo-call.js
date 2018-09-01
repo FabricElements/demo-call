@@ -20,16 +20,24 @@ class DemoCall extends PolymerElement {
    */
   static get template() {
     return html`
-      <style>
+      <style is="custom-style">
         :host {
-          display: block;
+          display: inline-block;
+          border-radius: 20px;
+          background-color: var(--paper-grey-900);
+          transition: all 200ms linear;
+          max-width: 40px;
+          min-width: 40px;
+          overflow: hidden;
+          max-height: 40px;
+        }
+        :host([active]) {
+          max-width: 150px;
+          min-width: 150px;          
         }
         iron-icon {
-          fill: var(--icon-toggle-color, rgba(0,0,0,0));
-          stroke: var(--icon-toggle-outline-color, currentcolor);
         }
-        :host([pressed]) iron-icon {
-          fill: var(--icon-toggle-pressed-color, currentcolor);
+        :host([active]) iron-icon {
         }
         paper-icon-button {
           color: white;
@@ -43,20 +51,22 @@ class DemoCall extends PolymerElement {
         paper-icon-button[toggleOne] {
           background-color: var(--paper-red-a700);
         }
+        #text {
+         color: white;       
+         text-align: center;
+         font-weight: 500; 
+        }
       /*  paper-icon-button[active] {
           background-color: var(--paper-red-a700);
         } */
       </style>
-      <paper-icon-button icon="[[toggleOne]]"
-                          on-tap="toggle"
-                          active$="[[reactive]]">
-      </paper-icon-button>
       
-      <paper-icon-button icon="[[toggleIcon]]"
+      
+      <paper-icon-button icon="[[_toggleIcon]]"
                           on-tap="toggle"
                           active$="[[active]]">
       </paper-icon-button>
-      LLamada entrante
+      <span id="text">[[status]]</span>
     `;
   }
 
@@ -66,25 +76,22 @@ class DemoCall extends PolymerElement {
    */
   static get properties() {
     return {
-
-      toggleOne: {
+      _toggleIcon: {
         type: String,
         value: 'communication:call',
-        // computed: '_computeIcon(reactive)',
+      },
+
+      status: {
+        type: String,
+        value: 'default',
+        observer: '_statusObserver',
+        reflectToAttribute: true,
       },
 
       active: {
         type: Boolean,
         value: false,
-        notify: true,
         reflectToAttribute: true,
-        observer: '_activeObserver',
-      },
-
-      toggleIcon: {
-        type: String,
-        value: 'communication:call',
-        computed: '_computeIcon(active)',
       },
     };
   }
@@ -99,15 +106,26 @@ class DemoCall extends PolymerElement {
   }
 
   toggle() {
-    this.active = !this.active;
+    this._statusObserver();
+    setTimeout(() => this._statusObserver('ringing'), 2000);
+    setTimeout(() => this._statusObserver('failed'), 4000);
+    setTimeout(() => this._statusObserver(), 6000);
   }
 
-  _activeObserver(active) {
-    this.toggleIcon = active ? 'notification:phone-in-talk' : 'notification:phone-missed';
-  }
-
-  _computeIcon(active) {
-    return active ? 'notification:phone-in-talk' : 'notification:phone-missed';
+  _statusObserver(status) {
+    switch (status) {
+      default:
+        this.active = false;
+        this._toggleIcon = 'communication:call';
+        break;
+      case 'ringing':
+        this.active = true;
+        this._toggleIcon = 'notification:phone-in-talk';
+        break;
+      case 'failed':
+        this.active = true;
+        this._toggleIcon = 'notification:phone-missed';
+    }
   }
 }
 
