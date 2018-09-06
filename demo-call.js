@@ -27,44 +27,45 @@ class DemoCall extends PolymerElement {
           background-color: var(--paper-grey-900);
           transition: all 200ms linear;
           max-width: 40px;
-          min-width: 40px;
           overflow: hidden;
           max-height: 40px;
         }
         :host([active]) {
-          max-width: 150px;
-          min-width: 150px;          
+          max-width: 250px;          
         }
         iron-icon {
-        }
-        :host([active]) iron-icon {
         }
         paper-icon-button {
           color: white;
           background-color: var(--paper-blue-a400);
           border-radius: 50%;
         }
-        paper-icon-button[active] {
-          background-color: var(--paper-green-a700);
+        :host([status=ringing]) paper-icon-button {
+          background-color: var(--paper-green-a400);
         }
-        
-        paper-icon-button[toggleOne] {
-          background-color: var(--paper-red-a700);
+        :host([status=failed]) paper-icon-button {
+          background-color: var(--paper-red-a400);
         }
         #text {
          color: white;       
          text-align: center;
-         font-weight: 500; 
+         font-weight: 400; 
+         max-width: 0px;
+         min-width: 0px;
+         transition: all 200ms linear;
+         display: inline-block;
+         font-size: 20px;
+         line-height: 20px;
+         letter-spacing: 2px;
+         padding-right: 5px;
         }
-      /*  paper-icon-button[active] {
-          background-color: var(--paper-red-a700);
-        } */
-      </style>
-      
-      
+        :host([active]) #text {
+          max-width: 200px;
+          min-width: 100px;
+        }
+      </style> 
       <paper-icon-button icon="[[_toggleIcon]]"
-                          on-tap="toggle"
-                          active$="[[active]]">
+                          on-tap="toggle">
       </paper-icon-button>
       <span id="text">[[status]]</span>
     `;
@@ -76,18 +77,25 @@ class DemoCall extends PolymerElement {
    */
   static get properties() {
     return {
+      /**
+       * Icon name
+       */
       _toggleIcon: {
         type: String,
         value: 'communication:call',
       },
-
+      /**
+       * Defines the active state for the component
+       */
       status: {
         type: String,
-        value: 'default',
+        value: null,
         observer: '_statusObserver',
         reflectToAttribute: true,
       },
-
+      /**
+       * Active state of the component
+       */
       active: {
         type: Boolean,
         value: false,
@@ -97,21 +105,19 @@ class DemoCall extends PolymerElement {
   }
 
   /**
-   * Constructor
+   * Change the state of the component when it's called
    */
-  // phone-missed
-  constructor() {
-    super();
-    // this.addEventListener('click', this.toggle.bind(this));
-  }
-
   toggle() {
-    this._statusObserver();
-    setTimeout(() => this._statusObserver('ringing'), 2000);
-    setTimeout(() => this._statusObserver('failed'), 4000);
-    setTimeout(() => this._statusObserver(), 6000);
+    this.status = 'ringing';
+    setTimeout(() => this.status = 'failed', 2000);
+    setTimeout(() => this.status = null, 4000);
   }
 
+  /**
+   * Listen the status and changes the icon and active state
+   * @param {null|string} status
+   * @private
+   */
   _statusObserver(status) {
     switch (status) {
       default:
@@ -129,4 +135,4 @@ class DemoCall extends PolymerElement {
   }
 }
 
-window.customElements.define('demo-call', DemoCall);
+customElements.define('demo-call', DemoCall);
