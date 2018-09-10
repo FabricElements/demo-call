@@ -135,4 +135,4 @@ class DemoCall extends PolymerElement {
   }
 }
 
-customElements.define('demo-call', DemoCall);
+window.customElements.define('demo-call', DemoCall);
